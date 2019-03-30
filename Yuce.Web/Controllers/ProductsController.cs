@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Yuce.Domain.Services.IServices;
+using Yuce.Models.Entities;
 
 namespace Yuce.Web.Controllers
 {
@@ -28,6 +29,22 @@ namespace Yuce.Web.Controllers
         {
             var returnItem = ProductService.GetProduct(id);
             return View(returnItem);
+        }
+        public IActionResult SaveOrUpdate(int id=0)
+        {
+            var item = new Product();
+            if(id > 0)
+            {
+                item = ProductService.GetProduct(id);
+            }
+
+            return View(item);
+        }
+        [HttpPost]
+        public IActionResult SaveOrUpdate(Product product)
+        {
+            int id = ProductService.SaveOrUpdate(product);
+            return RedirectToAction("Index");
         }
     }
 }

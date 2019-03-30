@@ -9,7 +9,7 @@ namespace Yuce.Domain.Repositories
     public abstract class BaseRepository
     {
         public string ConnectionString { get; set; }
-        public static string ConnectionStringKey = "DefaultConnection";
+  
         protected IDatabaseContext DatabaseContext { get; set; }
         protected IConfiguration Configuration { get; set; }
 

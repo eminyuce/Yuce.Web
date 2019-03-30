@@ -25,36 +25,39 @@ namespace Yuce.Domain.DB
             t.Value = value;
             return t;
         }
-        public DataSet ExecuteDataSet(String connectionStringKey, 
+        public DataSet ExecuteDataSet(
             string commandText, 
             CommandType commandType, 
             List<DbParameter> parameters)
         {
-            string connectionString = Configuration.GetConnectionString(connectionStringKey);
+            string connectionString = Configuration.GetConnectionString(ConnectionStringKey);
             return MySqlDatabaseUtility.ExecuteDataSet(new MySqlConnection(connectionString), commandText, commandType,
                 parameters.Cast<MySqlParameter>().ToArray());
         }
 
 
-        public int ExecuteScalar(string connectionStringKey,
+        public int ExecuteScalar(
             string commandText,
             CommandType commandType,
             List<DbParameter> parameters)
         {
-            string connectionString = Configuration.GetConnectionString(connectionStringKey);
+            string connectionString = Configuration.GetConnectionString(ConnectionStringKey);
             return MySqlDatabaseUtility.ExecuteScalar(new MySqlConnection(connectionString),
                 commandText,
                 commandType,
                 parameters.Cast<MySqlParameter>().ToArray()).ToInt();
         }
     
-        public int SaveOrUpdate(string connectionStringKey, string commandText, CommandType commandType, List<DbParameter> parameterList)
+        public int SaveOrUpdate(string commandText, CommandType commandType, List<DbParameter> parameterList)
         {
-            string connectionString = Configuration.GetConnectionString(connectionStringKey);
-            commandText = String.Format(@"CALL {0}(@p_Id,@p_Name)", commandText);
-            int id = ExecuteScalar(connectionStringKey,
-                commandText, commandType,
-                parameterList);
+            string connectionString = Configuration.GetConnectionString(ConnectionStringKey);
+            commandText = String.Format(@"{0}(@p_Id,@p_Name)", commandText);
+
+
+            int id = MySqlDatabaseUtility.ExecuteScalar(new MySqlConnection(connectionString), 
+                commandText,
+                CommandType.Text,
+                parameterList.Cast<MySqlParameter>().ToArray()).ToInt();
             return id;
         }
 

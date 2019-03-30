@@ -23,11 +23,11 @@ namespace Yuce.Domain.Repositories
         public Product GetProduct(int id)
         {
             var item = new Product();
-            String commandText = @"SELECT * FROM products ORDER BY Id DESC";
+            String commandText = @"SELECT * FROM products where id=@id ORDER BY Id DESC";
             var parameterList = new List<DbParameter>();
             var commandType = CommandType.Text;
             parameterList.Add(DatabaseContext.GetDbParameter("Id", id, SqlDbType.Int));
-            DataSet dataSet = DatabaseContext.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
+            DataSet dataSet = DatabaseContext.ExecuteDataSet(commandText, commandType, parameterList);
             if (dataSet.Tables.Count > 0)
             {
                 using (DataTable dt = dataSet.Tables[0])
@@ -48,7 +48,7 @@ namespace Yuce.Domain.Repositories
             String commandText = @"SELECT * FROM products ORDER BY Id DESC";
             var parameterList = new List<DbParameter>();
             var commandType = CommandType.Text;
-            DataSet dataSet = DatabaseContext.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
+            DataSet dataSet = DatabaseContext.ExecuteDataSet(commandText, commandType, parameterList);
             if (dataSet.Tables.Count > 0)
             {
                 using (DataTable dt = dataSet.Tables[0])
@@ -68,9 +68,9 @@ namespace Yuce.Domain.Repositories
             String commandText = @"SaveOrUpdateProduct";
             var parameterList = new List<DbParameter>();
             var commandType = CommandType.StoredProcedure;
-            parameterList.Add(DatabaseContext.GetDbParameter("id", item.Id, SqlDbType.Int));
-            parameterList.Add(DatabaseContext.GetDbParameter("name", item.Name.ToStr(), SqlDbType.NVarChar));
-            int id = DatabaseContext.SaveOrUpdate(ConnectionStringKey, commandText, commandType, parameterList).ToInt();
+            parameterList.Add(DatabaseContext.GetDbParameter("p_Id", item.Id, SqlDbType.Int));
+            parameterList.Add(DatabaseContext.GetDbParameter("p_Name", item.Name.ToStr(), SqlDbType.NVarChar));
+            int id = DatabaseContext.SaveOrUpdate(commandText, commandType, parameterList).ToInt();
             return id;
         }
 

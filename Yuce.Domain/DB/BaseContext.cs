@@ -11,7 +11,7 @@ namespace Yuce.Domain.DB
     public abstract class BaseContext
     {
         protected IConfiguration Configuration { get; set; }
-
+        public static string ConnectionStringKey = "DefaultConnection";
         public BaseContext(IConfiguration configuration)
         {
             Configuration = configuration;

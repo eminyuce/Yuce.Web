@@ -41,14 +41,14 @@ namespace Yuce.Web
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString(BaseRepository.ConnectionStringKey)));
+                options.UseMySQL(Configuration.GetConnectionString(BaseContext.ConnectionStringKey)));
 
             services.AddDefaultIdentity<IdentityUser>()
             .AddDefaultUI(UIFramework.Bootstrap4)
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddLogging(); 
-            services.AddTransient<IDatabaseContext, MySqlContext>();
+            services.AddTransient<IDatabaseContext, SqlServerContext>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IProductService, ProductService>();
 

@@ -7,5 +7,7 @@ namespace Yuce.Domain.Services.IServices
     {
         List<Product> GetProducts();
         Product GetProduct(int id);
+        int SaveOrUpdate(Product product);
+
     }
 }

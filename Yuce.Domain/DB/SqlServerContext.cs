@@ -24,28 +24,29 @@ namespace Yuce.Domain.DB
             t.Value = value;
             return t;
         }
-        public DataSet ExecuteDataSet(String connectionStringKey, 
+        public DataSet ExecuteDataSet(
             string commandText, 
             CommandType commandType,
             List<DbParameter> parameters)
         {
-            string connectionString = Configuration.GetConnectionString(connectionStringKey);
+            string connectionString = Configuration.GetConnectionString(ConnectionStringKey);
             return DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType,
                  parameters.Cast<SqlParameter>().ToArray());
         }
 
-        public int ExecuteScalar(string connectionStringKey, string commandText, CommandType commandType, List<DbParameter> parameters)
+        public int ExecuteScalar(string commandText, CommandType commandType, List<DbParameter> parameters)
         {
-            string connectionString = Configuration.GetConnectionString(connectionStringKey);
-            return DatabaseUtility.ExecuteScalar(connectionString, commandText, commandType, parameters.Cast<SqlParameter>().ToArray()).ToInt();
+            string connectionString = Configuration.GetConnectionString(ConnectionStringKey);
+            return DatabaseUtility.ExecuteScalar(new SqlConnection(connectionString), commandText, commandType, parameters.Cast<SqlParameter>().ToArray()).ToInt();
         }
 
-        public int SaveOrUpdate(string connectionStringKey, string commandText, CommandType commandType, List<DbParameter> parameterList)
+        public int SaveOrUpdate(string commandText, CommandType commandType, List<DbParameter> parameterList)
         {
-            string connectionString = Configuration.GetConnectionString(connectionStringKey);
+            string connectionString = Configuration.GetConnectionString(ConnectionStringKey);
             commandText = String.Format(@"{0}", commandText);
-            int id = ExecuteScalar(connectionStringKey,
-                commandText, commandType,
+            int id = ExecuteScalar(
+                commandText,
+                commandType,
                 parameterList).ToInt();
             return id;
         }
