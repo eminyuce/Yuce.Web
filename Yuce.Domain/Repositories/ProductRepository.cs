@@ -15,14 +15,8 @@ namespace Yuce.Domain.Repositories
 {
     public class ProductRepository : BaseRepository, IProductRepository
     {
-        private IDatabaseUtility DatabaseUtility { get; set; }
-        private IConfiguration Configuration { get; set; }
-
-        public ProductRepository(IDatabaseUtility databaseUtility, IConfiguration configuration)
+        public ProductRepository(IDatabaseUtility databaseUtility, IConfiguration configuration) : base(databaseUtility, configuration)
         {
-            DatabaseUtility = databaseUtility;
-            Configuration = configuration;
-           
 
         }
 
