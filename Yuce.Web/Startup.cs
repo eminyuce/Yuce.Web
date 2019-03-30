@@ -13,6 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using Yuce.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yuce.Domain.Services;
+using Yuce.Domain.Services.IServices;
+using Yuce.Domain.Repositories.IRepositories;
+using Yuce.Domain.Repositories;
+using Yuce.Domain.DB;
 
 namespace Yuce.Web
 {
@@ -36,11 +41,17 @@ namespace Yuce.Web
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySQL(Configuration.GetConnectionString(BaseRepository.ConnectionStringKey)));
+
             services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddDefaultUI(UIFramework.Bootstrap4)
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddLogging(); 
+            services.AddTransient<IDatabaseUtility, SqlServerDatabaseUtility>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IProductService, ProductService>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -64,7 +75,7 @@ namespace Yuce.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseAuthentication();
+           app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

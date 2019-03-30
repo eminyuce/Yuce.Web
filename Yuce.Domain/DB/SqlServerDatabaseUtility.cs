@@ -1,42 +1,40 @@
-﻿using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace Yuce.Domain.DB
 {
 
-    public class MySqlDatabaseUtility : DatabaseUtility, IDatabaseUtility
+    public class SqlServerDatabaseUtility : DatabaseUtility, IDatabaseUtility
     {
-        public MySqlDatabaseUtility(IConfiguration configuration) : base(configuration)
+        public SqlServerDatabaseUtility(IConfiguration configuration) : base(configuration)
         {
 
         }
 
         public DataSet ExecuteDataSet(String connectionStringKey, 
             string commandText, 
-            CommandType commandType, 
+            CommandType commandType,
             List<DbParameter> parameters)
         {
             string connectionString = Configuration.GetConnectionString(connectionStringKey);
-            return ExecuteDataSet(new MySqlConnection(connectionString), null, commandText, commandType,
-                parameters.Cast<MySqlParameter>());
+            return ExecuteDataSet(new SqlConnection(connectionString), null, commandText, commandType,
+                 parameters.Cast<SqlParameter>());
         }
 
-        public static DataSet ExecuteDataSet(MySqlConnection connection, string database, string commandText,
-            CommandType commandType,
-            IEnumerable<MySqlParameter> parameters)
+        private DataSet ExecuteDataSet(SqlConnection connection, string database, string commandText, CommandType commandType,
+             IEnumerable<SqlParameter> parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             var value = new DataSet();
 
             // Build Adapter
-            var adapter = new MySqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            var adapter = new SqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -52,17 +50,20 @@ namespace Yuce.Domain.DB
 
             return value;
         }
-        private static MySqlCommand BuildCommand(string commandText, 
-            MySqlConnection connection,
-            CommandType commandType, 
-            IEnumerable<MySqlParameter> parameters)
-        {
-            MySqlCommand command = new MySqlCommand(commandText, connection);
-            command.CommandType = commandType;
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        //// PRIVATE METHODS ///
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        private SqlCommand BuildCommand(string commandText, SqlConnection connection, 
+            CommandType commandType,
+            IEnumerable<SqlParameter> parameters)
+        {
+            SqlCommand command = new SqlCommand(commandText, connection);
+            command.CommandType = commandType;
+            command.CommandTimeout = SqlCommandTimeout;
             if (parameters != null)
             {
-                foreach (MySqlParameter parameter in parameters)
+                foreach (SqlParameter parameter in parameters)
                 {
                     command.Parameters.Add(parameter);
                 }
@@ -70,6 +71,8 @@ namespace Yuce.Domain.DB
 
             return command;
         }
+   
+      
     }
 
 }
