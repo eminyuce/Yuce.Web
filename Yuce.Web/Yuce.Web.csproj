@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DotNetCoreCodeGenerator\HelpersProject\HelpersProject.csproj" />
     <ProjectReference Include="..\Yuce.Domain\Yuce.Domain.csproj" />
+    <ProjectReference Include="..\Yuce.Models\Yuce.Models.csproj" />
   </ItemGroup>
 
 </Project>
