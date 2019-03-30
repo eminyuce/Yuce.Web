@@ -10,12 +10,12 @@ namespace Yuce.Domain.Repositories
     {
         public string ConnectionString { get; set; }
         public static string ConnectionStringKey = "DefaultConnection";
-        protected IDatabaseContext DatabaseUtility { get; set; }
+        protected IDatabaseContext DatabaseContext { get; set; }
         protected IConfiguration Configuration { get; set; }
 
-        public BaseRepository(IDatabaseContext databaseUtility, IConfiguration configuration)
+        public BaseRepository(IDatabaseContext databaseContext, IConfiguration configuration)
         {
-            DatabaseUtility = databaseUtility;
+            DatabaseContext = databaseContext;
             Configuration = configuration;
         }
     }

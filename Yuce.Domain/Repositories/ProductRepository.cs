@@ -15,7 +15,7 @@ namespace Yuce.Domain.Repositories
 {
     public class ProductRepository : BaseRepository, IProductRepository
     {
-        public ProductRepository(IDatabaseContext databaseUtility, IConfiguration configuration) : base(databaseUtility, configuration)
+        public ProductRepository(IDatabaseContext databaseContext, IConfiguration configuration) : base(databaseContext, configuration)
         {
 
         }
@@ -26,8 +26,8 @@ namespace Yuce.Domain.Repositories
             String commandText = @"SELECT * FROM products ORDER BY Id DESC";
             var parameterList = new List<DbParameter>();
             var commandType = CommandType.Text;
-            parameterList.Add(DatabaseUtility.GetDbParameter("Id", id, SqlDbType.Int));
-            DataSet dataSet = DatabaseUtility.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
+            parameterList.Add(DatabaseContext.GetDbParameter("Id", id, SqlDbType.Int));
+            DataSet dataSet = DatabaseContext.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
             if (dataSet.Tables.Count > 0)
             {
                 using (DataTable dt = dataSet.Tables[0])
@@ -48,7 +48,7 @@ namespace Yuce.Domain.Repositories
             String commandText = @"SELECT * FROM products ORDER BY Id DESC";
             var parameterList = new List<DbParameter>();
             var commandType = CommandType.Text;
-            DataSet dataSet = DatabaseUtility.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
+            DataSet dataSet = DatabaseContext.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
             if (dataSet.Tables.Count > 0)
             {
                 using (DataTable dt = dataSet.Tables[0])
@@ -68,9 +68,9 @@ namespace Yuce.Domain.Repositories
             String commandText = @"SaveOrUpdateProduct";
             var parameterList = new List<DbParameter>();
             var commandType = CommandType.StoredProcedure;
-            parameterList.Add(DatabaseUtility.GetDbParameter("id", item.Id, SqlDbType.Int));
-            parameterList.Add(DatabaseUtility.GetDbParameter("name", item.Name.ToStr(), SqlDbType.NVarChar));
-            int id = DatabaseUtility.SaveOrUpdate(ConnectionStringKey, commandText, commandType, parameterList).ToInt();
+            parameterList.Add(DatabaseContext.GetDbParameter("id", item.Id, SqlDbType.Int));
+            parameterList.Add(DatabaseContext.GetDbParameter("name", item.Name.ToStr(), SqlDbType.NVarChar));
+            int id = DatabaseContext.SaveOrUpdate(ConnectionStringKey, commandText, commandType, parameterList).ToInt();
             return id;
         }
 
