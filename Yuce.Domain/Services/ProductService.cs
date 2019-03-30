@@ -23,5 +23,9 @@ namespace Yuce.Domain.Services
             return ProductRepository.GetProducts();
         }
 
+        public Product GetProduct(int id)
+        {
+            return ProductRepository.GetProduct(id);
+        }
     }
 }

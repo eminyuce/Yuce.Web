@@ -15,9 +15,31 @@ namespace Yuce.Domain.Repositories
 {
     public class ProductRepository : BaseRepository, IProductRepository
     {
-        public ProductRepository(IDatabaseUtility databaseUtility, IConfiguration configuration) : base(databaseUtility, configuration)
+        public ProductRepository(IDatabaseContext databaseUtility, IConfiguration configuration) : base(databaseUtility, configuration)
         {
 
+        }
+
+        public Product GetProduct(int id)
+        {
+            var item = new Product();
+            String commandText = @"SELECT * FROM products ORDER BY Id DESC";
+            var parameterList = new List<DbParameter>();
+            var commandType = CommandType.Text;
+            parameterList.Add(DatabaseUtility.GetDbParameter("Id", id, SqlDbType.Int));
+            DataSet dataSet = DatabaseUtility.ExecuteDataSet(ConnectionStringKey, commandText, commandType, parameterList);
+            if (dataSet.Tables.Count > 0)
+            {
+                using (DataTable dt = dataSet.Tables[0])
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        var e = GetNwmproductFromDataRow(dr);
+                        item = e;
+                    }
+                }
+            }
+            return item;
         }
 
         public List<Product> GetProducts()
@@ -39,6 +61,17 @@ namespace Yuce.Domain.Repositories
                 }
             }
             return list;
+        }
+
+        public int SaveOrUpdate(Product item)
+        {
+            String commandText = @"SaveOrUpdateProduct";
+            var parameterList = new List<DbParameter>();
+            var commandType = CommandType.StoredProcedure;
+            parameterList.Add(DatabaseUtility.GetDbParameter("id", item.Id, SqlDbType.Int));
+            parameterList.Add(DatabaseUtility.GetDbParameter("name", item.Name.ToStr(), SqlDbType.NVarChar));
+            int id = DatabaseUtility.SaveOrUpdate(ConnectionStringKey, commandText, commandType, parameterList).ToInt();
+            return id;
         }
 
         private Product GetNwmproductFromDataRow(DataRow dr)

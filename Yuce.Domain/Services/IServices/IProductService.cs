@@ -6,5 +6,6 @@ namespace Yuce.Domain.Services.IServices
     public interface IProductService
     {
         List<Product> GetProducts();
+        Product GetProduct(int id);
     }
 }

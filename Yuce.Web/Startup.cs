@@ -48,7 +48,7 @@ namespace Yuce.Web
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddLogging(); 
-            services.AddTransient<IDatabaseUtility, SqlServerDatabaseUtility>();
+            services.AddTransient<IDatabaseContext, MySqlContext>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IProductService, ProductService>();
 

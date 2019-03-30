@@ -24,5 +24,10 @@ namespace Yuce.Web.Controllers
             var returnList = ProductService.GetProducts();
             return View(returnList);
         }
+        public IActionResult Details(int id)
+        {
+            var returnItem = ProductService.GetProduct(id);
+            return View(returnItem);
+        }
     }
 }
